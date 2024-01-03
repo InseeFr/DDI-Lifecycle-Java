@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DDIInstance xmlns="ddi:instance:3_3"
+             xmlns:a="ddi:archive:3_3"
+             xmlns:d="ddi:datacollection:3_3"
+             xmlns:g="ddi:group:3_3"
+             xmlns:l="ddi:logicalproduct:3_3"
+             xmlns:r="ddi:reusable:3_3"
+             xmlns:s="ddi:studyunit:3_3"
+             xmlns:xhtml="http://www.w3.org/1999/xhtml"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="ddi:instance:3_3 https://www.ddialliance.org/Specification/DDI-Lifecycle/3.3/XMLSchema/instance.xsd"
+             isMaintainable="true">
+   <r:Agency>fr.insee</r:Agency>
+   <r:ID>example-id</r:ID>
+   <r:Version>1</r:Version>
+</DDIInstance>
