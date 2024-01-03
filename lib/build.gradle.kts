@@ -29,10 +29,10 @@ group = "fr.insee.ddi"
 version = "0.1.0-SNAPSHOT"
 
 repositories {
+    // Check maven local dependencies to avoid unnecessary network calls.
+    mavenLocal()
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    //
-    mavenLocal()
 }
 
 dependencies {
