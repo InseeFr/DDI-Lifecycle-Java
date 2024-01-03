@@ -1,0 +1,71 @@
+<xb:config xmlns:xb="http://xml.apache.org/xmlbeans/2004/02/xbean/config">
+
+  <xb:namespace uri="ddi:instance:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.instance</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:archive:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.archive</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:comparative:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.comparative</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:conceptualcomponent:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.conceptualcomponent</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:datacollection:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.datacollection</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:dataset:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.dataset</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:ddiprofile:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.ddiprofile</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:group:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.group</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:logicalproduct:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.logicalproduct</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicaldataproduct:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicaldataproduct</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicaldataproduct_ncube_inline:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicaldataproduct.ncube.inline</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicaldataproduct_ncube_normal:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicaldataproduct.ncube.normal</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicaldataproduct_ncube_tabular:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicaldataproduct.ncube.tabular</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicaldataproduct_proprietary:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicaldataproduct.proprietary</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:physicalinstance:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.physicalinstance</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:reusable:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.reusable</xb:package>
+  </xb:namespace>
+
+  <xb:namespace uri="ddi:studyunit:3_3">
+    <xb:package>fr.insee.ddi.lifecycle33.studyunit</xb:package>
+  </xb:namespace>
+
+</xb:config>

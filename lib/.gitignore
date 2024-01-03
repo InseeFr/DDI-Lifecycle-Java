@@ -1,0 +1,4 @@
+# Generated sources
+src/main/java/*
+# Generated resources
+src/main/resources/org/apache/xmlbeans/*
