@@ -26,7 +26,8 @@ java {
 }
 
 group = "fr.insee.ddi"
-version = "0.1.0-SNAPSHOT"
+version = "1.0.0"
+val nameForArtifactAndJar by extra("ddi-lifecycle")
 
 repositories {
     // Check maven local dependencies to avoid unnecessary network calls.
@@ -90,6 +91,7 @@ tasks.withType<Copy> {
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveBaseName=nameForArtifactAndJar
 }
 
 tasks.named<Test>("test") {
@@ -114,8 +116,15 @@ publishing {
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshotRepo: URI = URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            val releaseRepo: URI = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            var snapshotRepoUrl: String = System.getProperty("otherSnapshotRepoUrl")
+            if ( snapshotRepoUrl == null && "central" == System.getProperty("maven-target"))
+                snapshotRepoUrl="https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            val snapshotRepo: URI = URI.create(snapshotRepoUrl)
+
+            var releaseRepoUrl: String = System.getProperty("otherReleaseRepoUrl")
+            if (releaseRepoUrl==null && "central" == findProperty("maven-target"))
+                releaseRepoUrl="https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            val releaseRepo: URI = URI.create(releaseRepoUrl)
 
             name = "OSSRH"
             url = if (isSnapshot) snapshotRepo else releaseRepo
@@ -129,7 +138,7 @@ publishing {
 
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "ddi-lifecycle"
+            artifactId = nameForArtifactAndJar
             from(components["java"])
             pom {
                 name = "DDI Lifecycle Java"
@@ -178,6 +187,6 @@ signing {
 
 tasks.withType<Sign> {
     onlyIf {
-        !version.toString().endsWith("SNAPSHOT")
+        "central" == System.getProperty("maven-target") && !version.toString().endsWith("SNAPSHOT")
     }
 }
