@@ -91,7 +91,7 @@ tasks.withType<Copy> {
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveBaseName=nameForArtifactAndJar
+    archiveBaseName = nameForArtifactAndJar
 }
 
 tasks.named<Test>("test") {
@@ -111,28 +111,49 @@ tasks {
     }
 }
 
+/**
+ * To publish to a custom maven repo, use this command :
+ * ```
+ * gradle publish -DotherSnapshotRepoUrl="https://my-maven-repo/snapshots" -DotherReleaseRepoUrl="https://my-maven-repo/releases"
+ * ```
+ */
 publishing {
 
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            var snapshotRepoUrl: String = System.getProperty("otherSnapshotRepoUrl")
-            if ( snapshotRepoUrl == null && "central" == System.getProperty("maven-target"))
-                snapshotRepoUrl="https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            val snapshotRepo: URI = URI.create(snapshotRepoUrl)
+            val snapshoRepoProp = System.getProperty("otherSnapshotRepoUrl")
+            val releaseRepoProp = System.getProperty("otherReleaseRepoUrl")
+            val snapshotRepo: URI = if (snapshoRepoProp != null) {
+                URI.create(snapshoRepoProp)
+            } else if ("central" == System.getProperty("maven-target")) {
+                URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            } else {
+                URI.create("https://fakerepo/snapshots")
+            }
 
-            var releaseRepoUrl: String = System.getProperty("otherReleaseRepoUrl")
-            if (releaseRepoUrl==null && "central" == findProperty("maven-target"))
-                releaseRepoUrl="https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            val releaseRepo: URI = URI.create(releaseRepoUrl)
+            val releaseRepo: URI = if (releaseRepoProp != null) {
+                URI.create(releaseRepoProp)
+            } else if ("central" == System.getProperty("maven-target")) {
+                URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            } else {
+                URI.create("https://fakerepo/releases")
+            }
 
             name = "OSSRH"
             url = if (isSnapshot) snapshotRepo else releaseRepo
 
-            credentials {
-                username = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username").toString()
-                password = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password").toString()
+            val mavenUserProp = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username")
+            val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
+
+            if (mavenUserProp != null) {
+                println("Maven user : $mavenUserProp")
+                credentials {
+                    username = mavenUserProp.toString()
+                    password = mavenPwdProp.toString()
+                }
             }
+
         }
     }
 
