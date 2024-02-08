@@ -122,10 +122,10 @@ publishing {
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshoRepoProp = System.getProperty("otherSnapshotRepoUrl")
+            val snapshotRepoProp = System.getProperty("otherSnapshotRepoUrl")
             val releaseRepoProp = System.getProperty("otherReleaseRepoUrl")
-            val snapshotRepo: URI = if (snapshoRepoProp != null) {
-                URI.create(snapshoRepoProp)
+            val snapshotRepo: URI = if (snapshotRepoProp != null) {
+                URI.create(snapshotRepoProp)
             } else if ("central" == System.getProperty("maven-target")) {
                 URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
             } else {
