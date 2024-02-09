@@ -63,9 +63,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
-          server-id: ossrh
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_PASSWORD
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
