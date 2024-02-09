@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "DDI-Lifecycle-Java"
-include("lib")
+include("model")

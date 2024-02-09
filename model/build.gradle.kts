@@ -26,7 +26,8 @@ java {
 }
 
 group = "fr.insee.ddi"
-version = "0.1.0-SNAPSHOT"
+version = "1.0.0"
+val nameForArtifactAndJar by extra("ddi-lifecycle")
 
 repositories {
     // Check maven local dependencies to avoid unnecessary network calls.
@@ -90,6 +91,7 @@ tasks.withType<Copy> {
 }
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveBaseName = nameForArtifactAndJar
 }
 
 tasks.named<Test>("test") {
@@ -109,27 +111,44 @@ tasks {
     }
 }
 
+/**
+ * Publishing is configured for maven central by default.
+ * Repository can be configured using a command line argument:
+ * ```
+ * gradle publish -DrepoUrl="https://example-repo.com/"
+ * ```
+ */
 publishing {
 
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshotRepo: URI = URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            val releaseRepo: URI = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val snapshotRepo2: URI = URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            val releaseRepo2: URI = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val mavenRepo: URI = if (isSnapshot) snapshotRepo2 else releaseRepo2
+
+            val commandLineRepoUrl = System.getProperty("repoUrl")
 
             name = "OSSRH"
-            url = if (isSnapshot) snapshotRepo else releaseRepo
+            url = if (commandLineRepoUrl != null) URI.create(commandLineRepoUrl) else mavenRepo
 
-            credentials {
-                username = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username").toString()
-                password = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password").toString()
+            val mavenUserProp = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username")
+            val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
+
+            if (mavenUserProp != null && mavenPwdProp != null) {
+                println("Maven user: $mavenUserProp")
+                credentials {
+                    username = "$mavenUserProp"
+                    password = "$mavenPwdProp"
+                }
             }
+
         }
     }
 
     publications {
         create<MavenPublication>("mavenJava") {
-            artifactId = "ddi-lifecycle"
+            artifactId = nameForArtifactAndJar
             from(components["java"])
             pom {
                 name = "DDI Lifecycle Java"
@@ -166,10 +185,10 @@ publishing {
 // https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
     // Environment variables for ascii-armored keys (to be used in CI)
-    val publicGPGKey = System.getenv("GPG_PUBLIC_KEY")
-    val privateGPGKey = System.getenv("GPG_PRIVATE_KEY")
-    if (publicGPGKey != null && privateGPGKey != null) {
-        useInMemoryPgpKeys(publicGPGKey, privateGPGKey)
+    val privateGPGKey = System.getenv("GPG_SIGNING_KEY")
+    val gpgPassword = System.getenv("GPG_PASSWORD")
+    if (privateGPGKey != null && gpgPassword != null) {
+        useInMemoryPgpKeys(privateGPGKey, gpgPassword)
     }
     // NB: If ascii-armored keys are not given, signing.keyId, signing.secretKeyRingFile, and signing.password
     // properties are used
@@ -178,6 +197,6 @@ signing {
 
 tasks.withType<Sign> {
     onlyIf {
-        !version.toString().endsWith("SNAPSHOT")
+        System.getProperty("repoUrl") == null && !version.toString().endsWith("SNAPSHOT")
     }
 }
