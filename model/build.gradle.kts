@@ -112,9 +112,10 @@ tasks {
 }
 
 /**
- * To publish to a custom maven repo, use this command :
+ * Publishing is configured for maven central by default.
+ * Repository can be configured using a command line argument:
  * ```
- * gradle publish -DotherSnapshotRepoUrl="https://my-maven-repo/snapshots" -DotherReleaseRepoUrl="https://my-maven-repo/releases"
+ * gradle publish -DrepoUrl="https://example-repo.com/"
  * ```
  */
 publishing {
@@ -122,35 +123,23 @@ publishing {
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshotRepoProp = System.getProperty("otherSnapshotRepoUrl")
-            val releaseRepoProp = System.getProperty("otherReleaseRepoUrl")
-            val snapshotRepo: URI = if (snapshotRepoProp != null) {
-                URI.create(snapshotRepoProp)
-            } else if ("central" == System.getProperty("maven-target")) {
-                URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            } else {
-                URI.create("https://fakerepo/snapshots")
-            }
+            val snapshotRepo2: URI = URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            val releaseRepo2: URI = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val mavenRepo: URI = if (isSnapshot) snapshotRepo2 else releaseRepo2
 
-            val releaseRepo: URI = if (releaseRepoProp != null) {
-                URI.create(releaseRepoProp)
-            } else if ("central" == System.getProperty("maven-target")) {
-                URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            } else {
-                URI.create("https://fakerepo/releases")
-            }
+            val commandLineRepoUrl = System.getProperty("repoUrl")
 
             name = "OSSRH"
-            url = if (isSnapshot) snapshotRepo else releaseRepo
+            url = if (commandLineRepoUrl != null) URI.create(commandLineRepoUrl) else mavenRepo
 
             val mavenUserProp = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username")
             val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
 
-            if (mavenUserProp != null) {
-                println("Maven user : $mavenUserProp")
+            if (mavenUserProp != null && mavenPwdProp != null) {
+                println("Maven user: $mavenUserProp")
                 credentials {
-                    username = mavenUserProp.toString()
-                    password = mavenPwdProp.toString()
+                    username = "$mavenUserProp"
+                    password = "$mavenPwdProp"
                 }
             }
 
@@ -208,6 +197,6 @@ signing {
 
 tasks.withType<Sign> {
     onlyIf {
-        "central" == System.getProperty("maven-target") && !version.toString().endsWith("SNAPSHOT")
+        System.getProperty("repoUrl") == null && !version.toString().endsWith("SNAPSHOT")
     }
 }
