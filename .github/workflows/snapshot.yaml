@@ -2,10 +2,7 @@ name: Publish snapshot
 
 on:
   pull_request:
-    branches:
-      - 'main'
-    paths-ignore:
-      - 'README.md'
+    types: [labeled]
 
 env:
   JAVA_VERSION: '17'
