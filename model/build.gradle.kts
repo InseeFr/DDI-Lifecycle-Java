@@ -196,10 +196,10 @@ publishing {
 // https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
     // Environment variables for ascii-armored keys (to be used in CI)
-    val publicGPGKey = System.getenv("GPG_PUBLIC_KEY")
-    val privateGPGKey = System.getenv("GPG_PRIVATE_KEY")
-    if (publicGPGKey != null && privateGPGKey != null) {
-        useInMemoryPgpKeys(publicGPGKey, privateGPGKey)
+    val privateGPGKey = System.getenv("GPG_SIGNING_KEY")
+    val gpgPassword = System.getenv("GPG_PASSWORD")
+    if (privateGPGKey != null && gpgPassword != null) {
+        useInMemoryPgpKeys(privateGPGKey, gpgPassword)
     }
     // NB: If ascii-armored keys are not given, signing.keyId, signing.secretKeyRingFile, and signing.password
     // properties are used
