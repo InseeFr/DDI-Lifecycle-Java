@@ -4,8 +4,8 @@ on:
   pull_request:
     branches:
       - 'main'
-    paths:
-      - 'model'
+    paths-ignore:
+      - 'README.md'
 
 env:
   JAVA_VERSION: '17'
