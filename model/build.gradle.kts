@@ -123,9 +123,9 @@ publishing {
     repositories {
         maven {
             val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshotRepo2: URI = URI.create("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            val releaseRepo2: URI = URI.create("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            val mavenRepo: URI = if (isSnapshot) snapshotRepo2 else releaseRepo2
+            val snapshotRepo: URI = URI.create("https://oss.sonatype.org/content/repositories/snapshots/")
+            val releaseRepo: URI = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val mavenRepo: URI = if (isSnapshot) snapshotRepo else releaseRepo
 
             val commandLineRepoUrl = System.getProperty("repoUrl")
 
