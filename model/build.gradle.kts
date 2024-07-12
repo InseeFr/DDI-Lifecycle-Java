@@ -26,7 +26,7 @@ java {
 }
 
 group = "fr.insee.ddi"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 val nameForArtifactAndJar by extra("ddi-lifecycle")
 
 repositories {
