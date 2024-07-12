@@ -184,6 +184,7 @@ publishing {
 
 // https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
+    isRequired = true
     // Environment variables for ascii-armored keys (to be used in CI)
     val privateGPGKey = System.getenv("GPG_SIGNING_KEY")
     val gpgPassword = System.getenv("GPG_PASSWORD")
