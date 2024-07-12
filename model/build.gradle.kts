@@ -172,7 +172,3 @@ tasks.withType<Sign> {
         System.getProperty("repoUrl") == null && !version.toString().endsWith("SNAPSHOT")
     }
 }
-
-tasks.withType<GenerateModuleMetadata> {
-    enabled = false
-}

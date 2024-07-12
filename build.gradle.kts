@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "fr.insee.ddi"
-version = "1.0.0"
+version = "1.0.1"
 
 nexusPublishing {
     repositories {
