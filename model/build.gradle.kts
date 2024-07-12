@@ -25,8 +25,6 @@ java {
     withSourcesJar()
 }
 
-group = "fr.insee.ddi"
-version = "1.0.0"
 val nameForArtifactAndJar by extra("ddi-lifecycle")
 
 repositories {
@@ -44,7 +42,7 @@ dependencies {
 
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
 }
 
 sourceSets {
@@ -119,33 +117,6 @@ tasks {
  * ```
  */
 publishing {
-
-    repositories {
-        maven {
-            val isSnapshot: Boolean = version.toString().endsWith("SNAPSHOT")
-            val snapshotRepo: URI = URI.create("https://oss.sonatype.org/content/repositories/snapshots/")
-            val releaseRepo: URI = URI.create("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            val mavenRepo: URI = if (isSnapshot) snapshotRepo else releaseRepo
-
-            val commandLineRepoUrl = System.getProperty("repoUrl")
-
-            name = "OSSRH"
-            url = if (commandLineRepoUrl != null) URI.create(commandLineRepoUrl) else mavenRepo
-
-            val mavenUserProp = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username")
-            val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
-
-            if (mavenUserProp != null && mavenPwdProp != null) {
-                println("Maven user: $mavenUserProp")
-                credentials {
-                    username = "$mavenUserProp"
-                    password = "$mavenPwdProp"
-                }
-            }
-
-        }
-    }
-
     publications {
         create<MavenPublication>("mavenJava") {
             artifactId = nameForArtifactAndJar
@@ -179,12 +150,12 @@ publishing {
             }
         }
     }
-
 }
 
 // https://docs.gradle.org/current/userguide/signing_plugin.html
 signing {
     isRequired = true
+    println("Signing artifacts...")
     // Environment variables for ascii-armored keys (to be used in CI)
     val privateGPGKey = System.getenv("GPG_SIGNING_KEY")
     val gpgPassword = System.getenv("GPG_PASSWORD")
