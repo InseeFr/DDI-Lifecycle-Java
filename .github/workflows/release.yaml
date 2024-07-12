@@ -34,7 +34,7 @@ jobs:
           ./gradlew # (load the gradle wrapper, required for the get version step)
           echo "version=$(./gradlew :model:printVersion --console=plain -q)" >> $GITHUB_OUTPUT
 
-      - name: Version verification
+      - name: Release version verification
         run: |
           if ! [[ "${{ steps.version-step.outputs.version }}" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
             echo "Release interrupted: DDI Lifecycle lib version '${{ steps.version-step.outputs.version }}' is not in correct format X.Y.Z"
