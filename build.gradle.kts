@@ -1,11 +1,17 @@
-import java.net.URI
-
 plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
-group = "fr.insee.ddi"
-version = "1.0.0"
+allprojects {
+    group = "fr.insee.ddi"
+    version = "1.0.0"
+}
+
+tasks.register("printVersion") {
+    doLast {
+        println(project.version)
+    }
+}
 
 nexusPublishing {
     repositories {
@@ -17,7 +23,6 @@ nexusPublishing {
             val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
 
             if (mavenUserProp != null && mavenPwdProp != null) {
-                println("Maven user: $mavenUserProp")
                 username = "$mavenUserProp"
                 password = "$mavenPwdProp"
             }
