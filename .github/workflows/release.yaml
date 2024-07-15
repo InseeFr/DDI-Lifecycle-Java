@@ -1,11 +1,7 @@
-name: Release and publish
+name: Publish release
 
 on:
-  push:
-    branches:
-      - 'main'
-    paths-ignore:
-      - 'README.md'
+  workflow_dispatch:
 
 env:
   JAVA_VERSION: '17'
@@ -13,6 +9,7 @@ env:
 jobs:
 
   check-version:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       release-version: ${{ steps.version-step.outputs.version }}
@@ -32,7 +29,7 @@ jobs:
         id: version-step
         run: |
           ./gradlew # (load the gradle wrapper, required for the get version step)
-          echo "version=$(./gradlew :model:printVersion --console=plain -q)" >> $GITHUB_OUTPUT
+          echo "version=$(./gradlew printVersion --console=plain -q)" >> $GITHUB_OUTPUT
 
       - name: Release version verification
         run: |
@@ -76,7 +73,7 @@ jobs:
 
       - name: Publish DDI Lifecycle lib on Maven Central
         run: |
-          ./gradlew :model:publish
+          ./gradlew clean :model:publishToSonatype closeAndReleaseSonatypeStagingRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
