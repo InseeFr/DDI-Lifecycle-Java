@@ -1,6 +1,50 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ]
+  "extends": ["config:recommended", ":semanticCommits", ":disableRateLimiting"],
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["*"],
+      "labels": ["dependencies"]
+    },
+    {
+      "groupName": "dependencies",
+      "groupSlug": "update-dependencies",
+      "matchPackageNames": ["*"],
+      "excludePackageNames": ["org.apache.xmlbeans"],
+      "bumpVersion": "patch",
+      "dependencyDashboardApproval": false
+    },
+    {
+      "groupName": "xmlbeans (patch)",
+      "groupSlug": "xmlbeans-patch-update",
+      "matchPackageNames": ["org.apache.xmlbeans"],
+      "matchUpdateTypes": ["patch"],
+      "bumpVersion": "patch",
+      "dependencyDashboardApproval": false
+    },
+    {
+      "groupName": "xmlbeans (minor)",
+      "groupSlug": "xmlbeans-minor-update",
+      "matchPackageNames": ["org.apache.xmlbeans"],
+      "matchUpdateTypes": ["minor"],
+      "bumpVersion": "minor",
+      "dependencyDashboardApproval": false
+    },
+    {
+      "groupName": "xmlbeans (major)",
+      "groupSlug": "xmlbeans-major-update",
+      "matchPackageNames": ["org.apache.xmlbeans"],
+      "matchUpdateTypes": ["major"],
+      "bumpVersion": "major",
+      "dependencyDashboardApproval": true
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "addLabels": ["security"],
+    "bumpVersion": "patch",
+    "schedule": ["before 5:00am"]
+  },
+  "schedule": ["every weekend"],
+  "timezone": "Europe/Paris"
 }
