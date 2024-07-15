@@ -1,11 +1,7 @@
-name: Release and publish
+name: Publish release
 
 on:
-  push:
-    branches:
-      - 'main'
-    paths-ignore:
-      - 'README.md'
+  workflow_dispatch:
 
 env:
   JAVA_VERSION: '17'
@@ -13,6 +9,7 @@ env:
 jobs:
 
   check-version:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
       release-version: ${{ steps.version-step.outputs.version }}
