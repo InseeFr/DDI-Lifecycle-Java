@@ -1,0 +1,112 @@
+name: Publish snapshot
+
+on:
+  pull_request:
+    types: [labeled]
+
+env:
+  JAVA_VERSION: '17'
+
+jobs:
+
+  check-version:
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'publish-snapshot') }}
+    runs-on: ubuntu-latest
+    outputs:
+      snapshot-version: ${{ steps.version-step.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Get DDI-Lifecycle lib version
+        id: version-step
+        run: |
+          ./gradlew # (load the gradle wrapper, required for the get version step)
+          echo "version=$(./gradlew printVersion --console=plain -q)" >> $GITHUB_OUTPUT
+
+      - name: Snapshot version verification
+        run: |
+          if ! [[ "${{ steps.version-step.outputs.version }}" =~ ^[0-9]+.[0-9]+.[0-9]+-SNAPSHOT$ ]]; then
+            echo "Snapshot interrupted: DDI Lifecycle lib version '${{ steps.version-step.outputs.version }}' is not in correct format X.Y.Z-SNAPSHOT"
+            exit 1
+          fi
+
+      - name: Check tag existence
+        uses: mukunku/tag-exists-action@v1.5.0
+        id: check-tag-exists
+        with:
+          tag: ${{ steps.version-step.outputs.version }}
+
+      - name: Tag verification
+        run: |
+          if [[ "${{ steps.check-tag-exists.outputs.exists }}" == "true" ]]; then
+            echo "Snapshot interrupted: tag '${{ steps.version-step.outputs.version }}' already exists."
+            exit 1
+          fi
+
+  publish-snapshot:
+    needs: check-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Publish DDI Lifecycle lib on Maven Central
+        run: |
+          ./gradlew clean :model:publishToSonatype
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+
+  write-comment:
+    needs: [check-version, publish-snapshot]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 Version ${{ needs.check-version.outputs.snapshot-version }} published on maven central repository'
+            })
+
+  create-tag:
+    needs: [check-version, publish-snapshot]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create tag
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ needs.check-version.outputs.snapshot-version }}',
+              sha: context.sha
+            })
+
+  remove-publish-label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: 'publish-snapshot'

@@ -1,0 +1,97 @@
+name: Publish release
+
+on:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: '17'
+
+jobs:
+
+  check-version:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      release-version: ${{ steps.version-step.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Get DDI-Lifecycle lib version
+        id: version-step
+        run: |
+          ./gradlew # (load the gradle wrapper, required for the get version step)
+          echo "version=$(./gradlew printVersion --console=plain -q)" >> $GITHUB_OUTPUT
+
+      - name: Release version verification
+        run: |
+          if ! [[ "${{ steps.version-step.outputs.version }}" =~ ^[0-9]+.[0-9]+.[0-9]+$ ]]; then
+            echo "Release interrupted: DDI Lifecycle lib version '${{ steps.version-step.outputs.version }}' is not in correct format X.Y.Z"
+            exit 1
+          fi
+
+      - name: Check tag existence
+        uses: mukunku/tag-exists-action@v1.5.0
+        id: check-tag-exists
+        with:
+          tag: ${{ steps.version-step.outputs.version }}
+
+      - name: Tag verification
+        run: |
+          if [[ "${{ steps.check-tag-exists.outputs.exists }}" == "true" ]]; then
+            echo "Release interrupted: tag '${{ steps.version-step.outputs.version }}' already exists."
+            exit 1
+          fi
+
+  publish:
+    needs: check-version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          server-id: ossrh
+          server-username: OSSRH_USERNAME
+          server-password: OSSRH_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSWORD
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v3
+
+      - name: Publish DDI Lifecycle lib on Maven Central
+        run: |
+          ./gradlew clean :model:publishToSonatype closeAndReleaseSonatypeStagingRepository
+        env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          GPG_SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          GPG_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+  create-release:
+    needs: [check-version, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.check-version.outputs.release-version }}
+          target_commitish: ${{ github.head_ref || github.ref }}
+          name: ${{ needs.check-version.outputs.release-version }}
+          files: eno-ws/build/libs/eno-ws.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
