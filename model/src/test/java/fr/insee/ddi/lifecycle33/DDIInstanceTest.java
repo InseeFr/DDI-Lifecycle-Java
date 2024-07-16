@@ -60,4 +60,29 @@ class DDIInstanceTest {
         assertEquals("1", ddiInstanceType.getVersionArray(0));
     }
 
+    @Test
+    void parseDDIInstanceObject_fromString() throws XmlException {
+        //
+        String xmlDDI = """
+                <DDIInstance xmlns="ddi:instance:3_3"
+                             xmlns:r="ddi:reusable:3_3"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                             xsi:schemaLocation="ddi:instance:3_3 https://www.ddialliance.org/Specification/DDI-Lifecycle/3.3/XMLSchema/instance.xsd">
+                   <r:Agency>fr.insee</r:Agency>
+                   <r:ID>example-id</r:ID>
+                   <r:Version>1</r:Version>
+                </DDIInstance>
+                """;
+        //
+        DDIInstanceDocument ddiInstanceDocument = DDIInstanceDocument.Factory.parse(xmlDDI);
+        DDIInstanceType ddiInstanceType = ddiInstanceDocument.getDDIInstance();
+        //
+        assertEquals(1, ddiInstanceType.getIDList().size());
+        assertEquals(1, ddiInstanceType.getAgencyList().size());
+        assertEquals(1, ddiInstanceType.getVersionList().size());
+        assertEquals("example-id", ddiInstanceType.getIDArray(0).getStringValue());
+        assertEquals("fr.insee", ddiInstanceType.getAgencyArray(0));
+        assertEquals("1", ddiInstanceType.getVersionArray(0));
+    }
+
 }
