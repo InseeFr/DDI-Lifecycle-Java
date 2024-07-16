@@ -33,6 +33,8 @@ dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
+    // XMLUnit
+    testImplementation("org.xmlunit:xmlunit-assertj3:2.10.0")
 }
 
 sourceSets {
