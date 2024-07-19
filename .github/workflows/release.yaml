@@ -69,7 +69,9 @@ jobs:
           gpg-passphrase: GPG_PASSWORD
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/gradle-build-action@v3
+        # Note: the action recommends to switch to gradle/actions/setup-gradle@v3
+        # but this change makes the publish task fail at initialization of stating repository.
 
       - name: Publish DDI Lifecycle lib on Maven Central
         run: |

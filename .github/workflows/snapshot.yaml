@@ -24,7 +24,9 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/gradle-build-action@v3
+        # Note: the action recommends to switch to gradle/actions/setup-gradle@v3
+        # but this change makes the publish task fail at initialization of stating repository.
 
       - name: Get DDI-Lifecycle lib version
         id: version-step
