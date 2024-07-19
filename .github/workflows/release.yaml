@@ -69,6 +69,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
+        # Note: the action recommends to switch to gradle/actions/setup-gradle@v3
+        # but this change makes the publish task fail at initialization of stating repository.
 
       - name: Publish DDI Lifecycle lib on Maven Central
         run: |
@@ -79,18 +81,18 @@ jobs:
           GPG_SIGNING_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           GPG_PASSWORD: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-#  create-release:
-#    needs: [check-version, publish]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Create GitHub release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          tag_name: ${{ needs.check-version.outputs.release-version }}
-#          target_commitish: ${{ github.head_ref || github.ref }}
-#          name: ${{ needs.check-version.outputs.release-version }}
-#          files: eno-ws/build/libs/eno-ws.jar
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  create-release:
+    needs: [check-version, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.check-version.outputs.release-version }}
+          target_commitish: ${{ github.head_ref || github.ref }}
+          name: ${{ needs.check-version.outputs.release-version }}
+          files: eno-ws/build/libs/eno-ws.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
