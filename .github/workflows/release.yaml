@@ -68,7 +68,7 @@ jobs:
           gpg-passphrase: GPG_PASSWORD
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/gradle-build-action@v3
 
       - name: Publish DDI Lifecycle lib on Maven Central
         run: |
