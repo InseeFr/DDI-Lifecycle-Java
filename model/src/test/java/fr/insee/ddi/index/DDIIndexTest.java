@@ -51,7 +51,7 @@ public class DDIIndexTest {
         assertTrue(ddiIndex.containsId("variable-1-id"));
         assertTrue(ddiIndex.containsId("variable-2-id"));
         //
-        assertNull(ddiIndex.get("foo-id"));
+        assertThrows(NoSuchElementException.class, () -> ddiIndex.get("foo-id"));
         //
         compareDDIObjects(variableType1, ddiIndex.get("variable-1-id"));
         compareDDIObjects(variableType2, ddiIndex.get("variable-2-id"));
