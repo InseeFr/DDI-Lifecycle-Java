@@ -29,6 +29,8 @@ dependencies {
     api("org.apache.xmlbeans:xmlbeans:5.2.0")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.apache.logging.log4j:log4j-core:2.21.1")
+    //
+    implementation("org.springframework:spring-beans:6.1.11")
 
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
