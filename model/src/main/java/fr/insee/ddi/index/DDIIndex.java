@@ -132,20 +132,63 @@ public class DDIIndex {
         return index;
     }
 
-    /** Return the DDI object corresponding to the given identifier,
-     * null if the identifier is not in the index. */
+    /**
+     * Returns the DDI object corresponding to the given identifier.
+     * @param ddiObjectId String identifier value.
+     * @return The DDI object corresponding to the given identifier.
+     * @throws NoSuchElementException if there is no object under given identifier.
+     */
     public AbstractIdentifiableType get(String ddiObjectId) {
-        return index.get(ddiObjectId);
+        AbstractIdentifiableType object = index.get(ddiObjectId);
+        if (object == null)
+            throw new NoSuchElementException(String.format("Index has no object with id '%s'.", ddiObjectId));
+        return object;
     }
 
-    /** Return true if the index contains the given identifier. */
+    /**
+     * Returns the DDI object corresponding to the given identifier, cast in the given type.
+     * @param ddiObjectId String identifier value.
+     * @param clazz Class into which the result should be cast.
+     * @return The DDI object corresponding to the given identifier, cast in the given type.
+     * @param <T> Subtype of DDI AbstractIdentifiableType.
+     * @throws NoSuchElementException if there is no object under given identifier.
+     * @throws ClassCastException if the given object cannot be cast to the given type.
+     */
+    public <T extends AbstractIdentifiableType> T get(String ddiObjectId, Class<T> clazz) {
+        AbstractIdentifiableType object = this.get(ddiObjectId);
+        if (! clazz.isInstance(object))
+            throw new ClassCastException(String.format(
+                    "Index object with id '%s' is of type %s that cannot be cast to %s.",
+                    ddiObjectId, ddiObjectId.getClass(), clazz));
+        return clazz.cast(object);
+    }
+
+    /**
+     * Checks if the given identifier is present in the index.
+     * @param ddiObjectId String identifier value.
+     * @return True if the index contains the given identifier.
+     */
     public boolean containsId(String ddiObjectId) {
         return index.containsKey(ddiObjectId);
     }
 
-    /** Return parent object of DDI object with given identifier. */
+    /**
+     * Returns the parent object of DDI object with given identifier.
+     * @param ddiObjectId String identifier value.
+     * @throws NoSuchElementException if the parent object for given identifier cannot be found.
+     */
     public AbstractIdentifiableType getParent(String ddiObjectId) {
-        return index.get(parentsMap.get(ddiObjectId));
+        return this.get(parentsMap.get(ddiObjectId));
+    }
+
+    /**
+     * Returns the parent object of DDI object with given identifier.
+     * @param ddiObjectId String identifier value.
+     * @throws NoSuchElementException if the parent object for given identifier cannot be found.
+     * @throws ClassCastException if the given object cannot be cast to the given type.
+     */
+    public <T extends AbstractIdentifiableType> T getParent(String ddiObjectId, Class<T> clazz) {
+        return this.get(parentsMap.get(ddiObjectId), clazz);
     }
 
 }

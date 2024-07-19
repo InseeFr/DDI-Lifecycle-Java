@@ -1,6 +1,7 @@
 package fr.insee.ddi.index;
 
 import fr.insee.ddi.exception.DuplicateIdException;
+import fr.insee.ddi.lifecycle33.datacollection.SequenceType;
 import fr.insee.ddi.lifecycle33.group.ResourcePackageType;
 import fr.insee.ddi.lifecycle33.instance.DDIInstanceDocument;
 import fr.insee.ddi.lifecycle33.instance.DDIInstanceType;
@@ -9,6 +10,7 @@ import fr.insee.ddi.lifecycle33.logicalproduct.VariableType;
 import fr.insee.ddi.lifecycle33.reusable.AbstractIdentifiableType;
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static fr.insee.ddi.utils.DDIUtils.getIdValue;
@@ -101,6 +103,38 @@ public class DDIIndexTest {
         variableSchemeType.getVariableList().add(variableType2);
 
         assertThrows(DuplicateIdException.class, () -> new DDIIndex().indexDDIObject(variableSchemeType));
+    }
+
+    @Test
+    void typedGet() {
+        //
+        VariableSchemeType variableSchemeType = VariableSchemeType.Factory.newInstance();
+        setIdValue(variableSchemeType, "variable-scheme-id");
+        VariableType variableType1 = VariableType.Factory.newInstance();
+        setIdValue(variableType1, "variable-id");
+        variableSchemeType.getVariableList().add(variableType1);
+        //
+        DDIIndex ddiIndex = new DDIIndex();
+        ddiIndex.indexDDIObject(variableSchemeType);
+        //
+        assertInstanceOf(VariableType.class, ddiIndex.get("variable-id", VariableType.class));
+        assertThrows(NoSuchElementException.class, () -> ddiIndex.get("foo-id", VariableType.class));
+        assertThrows(ClassCastException.class, () -> ddiIndex.get("variable-id", SequenceType.class));
+    }
+
+    @Test
+    void typedGetParent() {
+        //
+        VariableSchemeType variableSchemeType = VariableSchemeType.Factory.newInstance();
+        setIdValue(variableSchemeType, "variable-scheme-id");
+        VariableType variableType1 = VariableType.Factory.newInstance();
+        setIdValue(variableType1, "variable-id");
+        variableSchemeType.getVariableList().add(variableType1);
+        //
+        DDIIndex ddiIndex = new DDIIndex();
+        ddiIndex.indexDDIObject(variableSchemeType);
+        //
+        assertInstanceOf(VariableSchemeType.class, ddiIndex.getParent("variable-id", VariableSchemeType.class));
     }
 
 }

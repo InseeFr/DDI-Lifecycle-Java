@@ -63,6 +63,35 @@ This example can be applied to any DDI Lifecycle object: `CodeList`, `Sequence`,
 
 Useful link: [DDI model documentation](https://ddialliance.github.io/ddimodel-web/DDI-L-3.3/)
 
+## Other features
+
+### Indexing of a DDI object
+
+You can index the objects contained within a DDI object.
+
+```java
+DDIIndex ddiIndex = new DDIIndex();
+// Perform indexing
+ddiIndex.indexDDIObject(someDDIObject);
+// Get an object within the index
+AbstractIdentifiableType innerObject = ddiIndex.get("some-inner-object-id");
+// The result can be typed
+VariableType variable = ddiIndex.get("some-variable-id", VariableType.class);
+// Get the parent object in the hierarchy
+VariableSchemeType variableScheme = ddiIndex.getParent("some-variable-id", VariableScheme.class);
+```
+
+### Utilities
+
+XMLBeans API is pretty verbose, a utility class of the lib offers some QOE methods:
+
+```java
+VariableType variable = VariableType.Factory.newInstance();
+DDIUtils.setIdValue(variable, "foo-id");
+DDIUtils.getIdValue(variable) // "foo-id"
+DDIUtils.ddiToString(variable) // "VariableTypeImpl[id=foo-id]"
+```
+
 ## Requests
 
-If you have a question or bug report, feel free to open an issue.
+If you have a question, request or bug report, feel free to open an issue.
