@@ -1,4 +1,5 @@
 # Generated sources
-src/main/java/*
+src/main/java/fr/insee/ddi/lifecycle33/*
+src/main/java/org/*
 # Generated resources
 src/main/resources/org/apache/xmlbeans/*
