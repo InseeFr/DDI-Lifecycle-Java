@@ -15,9 +15,6 @@ java {
     withSourcesJar()
 }
 
-group = "fr.insee.ddi"
-version = "1.1.0"
-
 val nameForArtifactAndJar by extra("ddi-lifecycle")
 
 repositories {
