@@ -21,14 +21,14 @@ Maven:
 <dependency>
     <groupId>fr.insee.ddi</groupId>
     <artifactId>ddi-lifecycle</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```kotlin
-implementation("fr.insee.ddi:ddi-lifecycle:1.0.0")
+implementation("fr.insee.ddi:ddi-lifecycle:1.1.0")
 ```
 
 ### Deserialize / serialize DDI objects
