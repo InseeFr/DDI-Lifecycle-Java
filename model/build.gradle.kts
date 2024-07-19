@@ -28,7 +28,7 @@ dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api("org.apache.xmlbeans:xmlbeans:5.2.0")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("org.apache.logging.log4j:log4j-core:2.21.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.23.1")
     //
     implementation("org.springframework:spring-beans:6.1.11")
 
