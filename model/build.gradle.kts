@@ -26,15 +26,15 @@ repositories {
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api("org.apache.xmlbeans:xmlbeans:5.2.0")
+    api("org.apache.xmlbeans:xmlbeans:5.2.1")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("org.apache.logging.log4j:log4j-core:2.21.1")
+    implementation("org.apache.logging.log4j:log4j-core:2.24.1")
     //
-    implementation("org.springframework:spring-beans:6.1.11")
+    implementation("org.springframework:spring-beans:6.1.14")
 
     // Use JUnit Jupiter for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.10.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.3")
     // XMLUnit
     testImplementation("org.xmlunit:xmlunit-assertj3:2.10.0")
 }
