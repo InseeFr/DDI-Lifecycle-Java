@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = "fr.insee.ddi"
-    version = "1.1.1"
+    version = "2.0.0"
 }
 
 tasks.register("printVersion") {
