@@ -8,6 +8,8 @@ allprojects {
 }
 
 tasks.register("printVersion") {
+    description = "Prints the project version in console."
+    group = JavaBasePlugin.BUILD_TASK_NAME
     doLast {
         println(project.version)
     }
