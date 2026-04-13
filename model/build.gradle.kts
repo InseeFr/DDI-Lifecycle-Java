@@ -30,11 +30,11 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.apache.logging.log4j:log4j-core:2.25.4")
     //
-    implementation("org.springframework:spring-beans:6.2.17")
+    implementation("org.springframework:spring-beans:7.0.6")
 
     // Use JUnit Jupiter for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter:5.14.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.14.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.3")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.3")
     // XMLUnit
     testImplementation("org.xmlunit:xmlunit-assertj3:2.11.0")
 }
