@@ -8,7 +8,7 @@ plugins {
 java {
     // Apply a specific Java toolchain to ease working on different environments.
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     // Generate javadoc and sources jar for maven central publishing
     withJavadocJar()
