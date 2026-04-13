@@ -8,7 +8,7 @@ plugins {
 java {
     // Apply a specific Java toolchain to ease working on different environments.
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     // Generate javadoc and sources jar for maven central publishing
     withJavadocJar()
@@ -24,19 +24,31 @@ repositories {
     mavenCentral()
 }
 
+val lo4jVersion = "2.25.4"
+val springVersion = "7.0.6"
+val junitVersion = "6.0.3"
+val xmlUnitVersion = "2.11.0"
+val assertJVersion = "3.27.7"
+
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api("org.apache.xmlbeans:xmlbeans:5.3.0")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation("org.apache.logging.log4j:log4j-core:2.25.4")
+    implementation("org.apache.logging.log4j:log4j-core:$lo4jVersion")
     //
-    implementation("org.springframework:spring-beans:6.2.17")
+    implementation("org.springframework:spring-beans:$springVersion")
 
     // Use JUnit Jupiter for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter:5.14.3")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.14.3")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
     // XMLUnit
-    testImplementation("org.xmlunit:xmlunit-assertj3:2.11.0")
+    testImplementation("org.xmlunit:xmlunit-assertj3:$xmlUnitVersion")
+
+    constraints {
+        testImplementation("org.assertj:assertj-core:$assertJVersion") {
+            because("Temporary fix for CVE in the assertj-core imported by xmlunit-assertj3.")
+        }
+    }
 }
 
 sourceSets {
