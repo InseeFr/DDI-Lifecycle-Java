@@ -11,7 +11,7 @@ This library offers deserialization / serialization for DDI objects, using metho
 
 ### Requirements
 
-Java 17 or above.
+Java 21 or above.
 
 ### [Get the dependency](https://mvnrepository.com/artifact/fr.insee.ddi/ddi-lifecycle)
 
@@ -21,14 +21,14 @@ Maven:
 <dependency>
     <groupId>fr.insee.ddi</groupId>
     <artifactId>ddi-lifecycle</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
 Gradle:
 
 ```kotlin
-implementation("fr.insee.ddi:ddi-lifecycle:1.1.0")
+implementation("fr.insee.ddi:ddi-lifecycle:2.0.0")
 ```
 
 ### Deserialize / serialize DDI objects
