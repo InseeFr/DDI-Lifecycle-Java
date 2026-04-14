@@ -75,7 +75,7 @@ jobs:
 
       - name: Publish DDI Lifecycle lib on Maven Central
         run: |
-          ./gradlew clean :model:publishToSonatype closeAndReleaseSonatypeStagingRepository --debug
+          ./gradlew clean :model:publishToSonatype closeAndReleaseSonatypeStagingRepository --info
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
