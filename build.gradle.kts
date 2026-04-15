@@ -18,8 +18,9 @@ tasks.register("printVersion") {
 nexusPublishing {
     repositories {
         sonatype {
-            nexusUrl.set(uri("https://oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://oss.sonatype.org/content/repositories/snapshots/"))
+            // https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuring-your-plugin
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
 
             val mavenUserProp = System.getenv("OSSRH_USERNAME") ?: findProperty("ossrh.username")
             val mavenPwdProp = System.getenv("OSSRH_PASSWORD") ?: findProperty("ossrh.password")
