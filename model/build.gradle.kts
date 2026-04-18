@@ -25,7 +25,7 @@ repositories {
 }
 
 val lo4jVersion = "2.25.4"
-val springVersion = "7.0.6"
+val springVersion = "7.0.7"
 val junitVersion = "6.0.3"
 val xmlUnitVersion = "2.11.0"
 val assertJVersion = "3.27.7"
