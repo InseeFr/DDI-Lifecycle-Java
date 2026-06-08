@@ -24,10 +24,10 @@ repositories {
     mavenCentral()
 }
 
-val lo4jVersion = "2.25.4"
-val springVersion = "7.0.6"
-val junitVersion = "6.0.3"
-val xmlUnitVersion = "2.11.0"
+val lo4jVersion = "2.26.0"
+val springVersion = "7.0.8"
+val junitVersion = "6.1.0"
+val xmlUnitVersion = "2.12.0"
 val assertJVersion = "3.27.7"
 
 dependencies {
