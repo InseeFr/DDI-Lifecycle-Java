@@ -15,7 +15,7 @@ Java 21 or above.
 
 ### [Get the dependency](https://mvnrepository.com/artifact/fr.insee.ddi/ddi-lifecycle)
 
-**Note** : a `2.0.0` version with a java 25, has been published yet it is not fully functional, for now use the `1.1.0`.
+**Note** : a `2.0.0` version with a java 25 build, has been published yet it is not fully functional, for now use the `1.1.0`.
 
 Maven:
 
